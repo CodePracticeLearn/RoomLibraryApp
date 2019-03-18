@@ -8,24 +8,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var chapterDatabase: ChapterDatabase? = null
+    private var demoDatabase: DemoDatabase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        chapterDatabase = ChapterDatabase.getDatabase(this)!!
+        demoDatabase = DemoDatabase.getDatabase(this)!!
         btnSave.setOnClickListener {
             if (!etEnterText.text.toString().isEmpty()) {
-                val chapterObj = Chapter(etEnterText.text.toString())
-                InsertTask(this, chapterObj).execute()
+                val colObj = DataClass1(etEnterText.text.toString())
+                InsertTask(this, colObj).execute()
             }
         }
-        btnDisplay.setOnClickListener {
-            GetDataFromDb(this).execute()
-        }
+
     }
-    private class InsertTask(var context: MainActivity, var chapter: Chapter) : AsyncTask<Void, Void, Boolean>() {
+    private class InsertTask(var context: MainActivity, var dataClass1: DataClass1) : AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
-            context.chapterDatabase!!.chapterDao().insert(chapter)
+            context.demoDatabase!!.chapterDao().insert(dataClass1)
             return true
         }
         override fun onPostExecute(bool: Boolean?) {
@@ -34,14 +32,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private class GetDataFromDb(var context: MainActivity) : AsyncTask<Void, Void, List<Chapter>>() {
-        override fun doInBackground(vararg params: Void?): List<Chapter> {
-            return context.chapterDatabase!!.chapterDao().getAllChapter()
+    private class GetData(var context: MainActivity) : AsyncTask<Void, Void, List<DataClass1>>() {
+        override fun doInBackground(vararg params: Void?): List<DataClass1> {
+            return context.demoDatabase!!.chapterDao().getAllChapter()
         }
-        override fun onPostExecute(chapterList: List<Chapter>?) {
-            if (chapterList!!.size > 0) {
-                for (i in 0..chapterList.size - 1) {
-                    context.tvDatafromDb.append(chapterList[i].chapterName)
+        override fun onPostExecute(dataClass1List: List<DataClass1>?) {
+            if (dataClass1List!!.size > 0) {
+                for (i in 0..dataClass1List.size - 1) {
+                    context.tvDatafromDb.append(dataClass1List[i].colName)
                 }
             }
         }
